@@ -21,6 +21,7 @@ struct Home : View {
     @State var color : Color = .black
     @State var type : PKInkingTool.InkType = .pencil
     @State var colorpicker = false
+    @State var thickness: CGFloat = 1.0
     
     //default is pen...
     
@@ -30,8 +31,7 @@ struct Home : View {
             
             VStack(spacing: 0) {
                 HStack(spacing: 15) {
-                    //                    Spacer()
-                    ColorPicker("", selection: $color)
+                    Spacer()
                     
                     Button(action: {
                         //changing type...
@@ -76,7 +76,56 @@ struct Home : View {
                         Image(systemName: "eraser.fill")
                             .font(.title)
                     }
+                    .padding(.trailing, 15)
                     
+                    //Change color buttons...
+                    Button(action: {color = .black
+                    }) {
+                        Circle()
+                            .foregroundColor(.black)
+                            .frame(width: 28, height: 28)
+                    }
+                    Button(action: {color = .red
+                    }) {
+                        Circle()
+                            .foregroundColor(.red)
+                            .frame(width: 28, height: 28)
+                    }
+                    Button(action: {color = .blue
+                    }) {
+                        Circle()
+                            .foregroundColor(.blue)
+                            .frame(width: 28, height: 28)
+                    }
+                    ColorPicker("", selection: $color)
+                        .labelsHidden()
+                        .padding(.trailing, 15)
+                    
+                    Button(action: {
+                        setToolThickness(1.0)
+                    }) {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 2)
+                            .foregroundColor(.white)
+                            .frame(width: 16)
+                    }
+                    Button(action: {
+                        setToolThickness(5.0)
+                    }) {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 2)
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                    }
+                    Button(action: {
+                        setToolThickness(10.0)
+                    }) {
+                        Circle()
+                            .stroke(Color.gray, lineWidth: 2)
+                            .foregroundColor(.white)
+                            .frame(width: 24)
+                    }
+
                     Spacer()
                     
                     //SharePlay Button
@@ -92,10 +141,19 @@ struct Home : View {
                     .padding(.top, 12)
                 
                 //Drawing View...
-                DrawingView(canvas: $canvas, isDraw: $isDraw, type: $type, color: $color)
+                DrawingView(canvas: $canvas, isDraw: $isDraw, type: $type, color: $color, thickness: $thickness)
             }
         }
     }
+    //Control thikness
+    func setToolThickness(_ thickness: CGFloat) {
+            self.thickness = thickness
+            if isDraw {
+                canvas.tool = PKInkingTool(type, color: UIColor(color), width: thickness)
+            } else {
+                canvas.tool = PKEraserTool(.bitmap, width: thickness)
+            }
+        }
     
     //    func SaveImage(){
     //        //getting image from cavas...
@@ -115,16 +173,18 @@ struct DrawingView : UIViewRepresentable {
     @Binding var isDraw : Bool
     @Binding var type : PKInkingTool.InkType
     @Binding var color : Color
+    @Binding var thickness: CGFloat
     
     //updating inkType...
     
     //    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     
     var ink : PKInkingTool{
-        PKInkingTool(type, color: UIColor(color))
+        PKInkingTool(type, color: UIColor(color), width: thickness)
     }
     
     let eraser = PKEraserTool(.bitmap)
+
     
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.drawingPolicy = .anyInput
@@ -148,3 +208,4 @@ struct CanvasView_Previews: PreviewProvider {
         CanvasView()
     }
 }
+
