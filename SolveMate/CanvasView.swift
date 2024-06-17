@@ -62,6 +62,17 @@ struct Home : View {
                 HStack(spacing: 15) {
                     Spacer()
                     
+                    //Undo & Redo
+                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                        Image(systemName: "arrow.uturn.backward")
+                            .font(.title)
+                    })
+                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                        Image(systemName: "arrow.uturn.forward")
+                            .font(.title)
+                    })
+                    .padding(.trailing, 30)
+                    
                     Button(action: {
                         //changing type...
                         isDraw = true
