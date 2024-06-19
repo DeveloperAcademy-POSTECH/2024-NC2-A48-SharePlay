@@ -25,6 +25,8 @@ struct Home : View {
     @State var type : PKInkingTool.InkType = .pencil
     @State var colorpicker = false
     @State var thickness: CGFloat = 1.0
+    @State var selectedTool: ToolType = .pencil
+    @State var selectedThickness: CGFloat = 1.0
     
     //default is pen...
     
@@ -59,7 +61,7 @@ struct Home : View {
                 .padding(.horizontal, 20)
                 
                 //toolbar
-                HStack(spacing: 15) {
+                HStack(spacing: 0) {
                     Spacer()
                     
                     //Undo & Redo
@@ -67,56 +69,33 @@ struct Home : View {
                         Image(systemName: "arrow.uturn.backward")
                             .font(.title)
                     })
+                    .padding(.trailing, 16)
                     Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                         Image(systemName: "arrow.uturn.forward")
                             .font(.title)
                     })
-                    .padding(.trailing, 30)
+                    .padding(.trailing, 32)
                     
-                    Button(action: {
-                        //changing type...
+                    //changing type...
+                    ToolButton(icon: "pencil", tool: .pencil, selectedTool: $selectedTool) {
                         isDraw = true
                         type = .pencil
-                        
-                    }) {
-                        Label{
-                        } icon: {
-                            Image(systemName: "pencil")
-                                .font(.title)
-                        }
                     }
-                    
-                    Button(action: {
+                    .padding(.trailing, 4)
+                    ToolButton(icon: "pencil.tip", tool: .pen, selectedTool: $selectedTool) {
                         isDraw = true
                         type = .pen
-                    }) {
-                        Label{
-                        } icon: {
-                            Image(systemName: "pencil.tip")
-                                .font(.title)
-                        }
                     }
-                    
-                    Button(action: {
+                    .padding(.trailing, 4)
+                    ToolButton(icon: "highlighter", tool: .marker, selectedTool: $selectedTool) {
                         isDraw = true
                         type = .marker
-                    }) {
-                        Label{
-                        } icon: {
-                            Image(systemName: "highlighter")
-                                .font(.title)
-                        }
                     }
                     
-                    Button(action: {
-                        //erase tool...
+                    ToolButton(icon: "eraser", tool: .eraser, selectedTool: $selectedTool) {             //erase tool...
                         isDraw = false
-                        
-                    }) {
-                        Image(systemName: "eraser")
-                            .font(.title)
                     }
-                    .padding(.trailing, 15)
+                    .padding(.trailing, 32)
                     
                     //Change color buttons...
 //                    Button(action: {color = .black
@@ -141,33 +120,21 @@ struct Home : View {
                     //ColorPicker
                     ColorPicker("", selection: $color)
                         .labelsHidden()
-                        .padding(.trailing, 15)
+                        .padding(.trailing, 32)
                     
                     //Control thickness
-                    Button(action: {
+                    ThicknessButton(thickness: 1.0, selectedThickness: $selectedThickness, width: 12) {
                         setToolThickness(1.0)
-                    }) {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                            .foregroundColor(.white)
-                            .frame(width: 12)
                     }
-                    Button(action: {
+                    .padding(.trailing, 16)
+                    ThicknessButton(thickness: 5.0, selectedThickness: $selectedThickness, width: 16) {
                         setToolThickness(5.0)
-                    }) {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                            .foregroundColor(.white)
-                            .frame(width: 16)
                     }
-                    Button(action: {
+                    .padding(.trailing, 16)
+                    ThicknessButton(thickness: 10.0, selectedThickness: $selectedThickness, width: 20) {
                         setToolThickness(10.0)
-                    }) {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                            .foregroundColor(.white)
-                            .frame(width: 20)
                     }
+                    .padding(.trailing, 16)
                     
                     Spacer()
                 }
@@ -200,6 +167,49 @@ struct Home : View {
     //
     //
     //    }
+}
+
+enum ToolType {
+    case pencil, pen, marker, eraser
+}
+
+struct ToolButton: View {
+    let icon: String
+    let tool: ToolType
+    @Binding var selectedTool: ToolType
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action:{
+            selectedTool = tool
+            action()
+        }) {
+            Image(systemName: icon)
+                .font(.title)
+                .frame(width: 44, height: 44)
+                .background(selectedTool == tool ? Color("backgroundColor") : Color.white)
+                .cornerRadius(8)
+        }
+    }
+}
+
+struct ThicknessButton: View {
+    let thickness: CGFloat
+    @Binding var selectedThickness: CGFloat
+    let width: CGFloat
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: {
+                    selectedThickness = thickness
+                    action()
+                }) {
+                    Circle()
+                        .stroke(selectedThickness == thickness ? Color.black : Color.gray, lineWidth: 2)
+                        .foregroundColor(.white)
+                        .frame(width: width)
+                }
+    }
 }
 
 struct DrawingView : UIViewRepresentable {
