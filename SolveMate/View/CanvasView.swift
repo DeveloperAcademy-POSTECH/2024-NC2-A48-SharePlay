@@ -1,15 +1,9 @@
-//
-//  ContentView.swift
-//  SolveMate
-//
-//  Created by 박서현 on 6/17/24.
-//
-
 import SwiftUI
 import PencilKit
+import GroupActivities
 
-var undoBarButtonitem: UIBarButtonItem!
-var redoBarButtonItem: UIBarButtonItem!
+//var undoBarButtonitem: UIBarButtonItem!
+//var redoBarButtonItem: UIBarButtonItem!
 
 struct CanvasView: View {
     var body: some View {
@@ -18,8 +12,10 @@ struct CanvasView: View {
 }
 
 struct Home : View {
+    @StateObject var canvas = CanvasController()
+    @State private var drawingView = PKCanvasView()
+    @StateObject var groupStateObserver = GroupStateObserver()
     
-    @State var canvas = PKCanvasView()
     @State var isDraw = true
     @State var color : Color = .black
     @State var type : PKInkingTool.InkType = .pencil
@@ -28,12 +24,8 @@ struct Home : View {
     @State var selectedTool: ToolType = .pencil
     @State var selectedThickness: CGFloat = 1.0
     
-    //default is pen...
-    
     var body: some View {
-        
         NavigationStack {
-            
             VStack(spacing: 0) {
                 //navigationbar
                 HStack(spacing: 15) {
@@ -49,12 +41,23 @@ struct Home : View {
                             .font(.title)
                     })
 
-                    //SharePlay Button
                     Button {
-                        // Start the activity.
+                        // SharePlay 실행 테스크
+                        Task {
+                            do {
+                                _ = try await SharePlay().activate()
+                            } catch {
+                                print("Failed to activate SharePlay activity: \(error)")
+                            }
+                        }
                     } label: {
                         Image(systemName: "shareplay")
                             .font(.title)
+                    }
+                }
+                .task {
+                    for await session in SharePlay.sessions() {
+                        canvas.configureGroupSession(session)
                     }
                 }
                 .frame(height: 44)
@@ -91,31 +94,10 @@ struct Home : View {
                         isDraw = true
                         type = .marker
                     }
-                    
-                    ToolButton(icon: "eraser", tool: .eraser, selectedTool: $selectedTool) {             //erase tool...
+                    ToolButton(icon: "eraser", tool: .eraser, selectedTool: $selectedTool) {
                         isDraw = false
                     }
                     .padding(.trailing, 32)
-                    
-                    //Change color buttons...
-//                    Button(action: {color = .black
-//                    }) {
-//                        Circle()
-//                            .foregroundColor(.black)
-//                            .frame(width: 28, height: 28)
-//                    }
-//                    Button(action: {color = .red
-//                    }) {
-//                        Circle()
-//                            .foregroundColor(.red)
-//                            .frame(width: 28, height: 28)
-//                    }
-//                    Button(action: {color = .blue
-//                    }) {
-//                        Circle()
-//                            .foregroundColor(.blue)
-//                            .frame(width: 28, height: 28)
-//                    }
                     
                     //ColorPicker
                     ColorPicker("", selection: $color)
@@ -144,111 +126,26 @@ struct Home : View {
                 Divider()
                     .padding(.top, 12)
                 
-                //Drawing View...
-                DrawingView(canvas: $canvas, isDraw: $isDraw, type: $type, color: $color, thickness: $thickness)
+                DrawingView(drawingView: $drawingView, canvasController: canvas, isDraw: $isDraw, type: $type, color: $color, thickness: $thickness)
             }
         }
     }
+    
     //Control thikness
     func setToolThickness(_ thickness: CGFloat) {
         self.thickness = thickness
         if isDraw {
-            canvas.tool = PKInkingTool(type, color: UIColor(color), width: thickness)
+            drawingView.tool = PKInkingTool(type, color: UIColor(color), width: thickness)
         } else {
-            canvas.tool = PKEraserTool(.bitmap, width: thickness)
+            drawingView.tool = PKEraserTool(.bitmap, width: thickness)
         }
     }
-    
-    //    func SaveImage(){
-    //        //getting image from cavas...
-    //        let Image = canvas.drawing.image(from: canvas.drawing.bounds, scale: 1)
-    //
-    //        //saving to albums...
-    //
-    //
-    //    }
 }
 
 enum ToolType {
     case pencil, pen, marker, eraser
 }
 
-struct ToolButton: View {
-    let icon: String
-    let tool: ToolType
-    @Binding var selectedTool: ToolType
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action:{
-            selectedTool = tool
-            action()
-        }) {
-            Image(systemName: icon)
-                .font(.title)
-                .frame(width: 44, height: 44)
-                .background(selectedTool == tool ? Color("backgroundColor") : Color.white)
-                .cornerRadius(8)
-        }
-    }
-}
-
-struct ThicknessButton: View {
-    let thickness: CGFloat
-    @Binding var selectedThickness: CGFloat
-    let width: CGFloat
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: {
-                    selectedThickness = thickness
-                    action()
-                }) {
-                    Circle()
-                        .stroke(selectedThickness == thickness ? Color.black : Color.gray, lineWidth: 2)
-                        .foregroundColor(.white)
-                        .frame(width: width)
-                }
-    }
-}
-
-struct DrawingView : UIViewRepresentable {
-    
-    // to capture drawing for saving into albums...
-    
-    @Binding var canvas : PKCanvasView
-    @Binding var isDraw : Bool
-    @Binding var type : PKInkingTool.InkType
-    @Binding var color : Color
-    @Binding var thickness: CGFloat
-    
-    //updating inkType...
-    
-    //    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-    
-    var ink : PKInkingTool{
-        PKInkingTool(type, color: UIColor(color), width: thickness)
-    }
-    
-    let eraser = PKEraserTool(.bitmap)
-    
-    
-    func makeUIView(context: Context) -> PKCanvasView {
-        canvas.drawingPolicy = .anyInput
-        
-        canvas.tool = isDraw ? ink : eraser
-        
-        return canvas
-    }
-    
-    func updateUIView(_ uiView: PKCanvasView, context: Context) {
-        
-        //updating tool when ever main view updates...
-        
-        uiView.tool = isDraw ? ink : eraser
-        
-    }
-}
 
 struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
