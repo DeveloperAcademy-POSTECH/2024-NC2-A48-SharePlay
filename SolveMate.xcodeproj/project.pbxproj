@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B6A0BA32C2016140097D717 /* SharePlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6A0BA22C2016140097D717 /* SharePlay.swift */; };
+		5B6A0BA72C2016C20097D717 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6A0BA62C2016C20097D717 /* Canvas.swift */; };
 		7299C6AE2C2008E8008DAF30 /* SolveMateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7299C6AD2C2008E8008DAF30 /* SolveMateApp.swift */; };
 		7299C6B02C2008E8008DAF30 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7299C6AF2C2008E8008DAF30 /* CanvasView.swift */; };
 		7299C6B22C2008E9008DAF30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7299C6B12C2008E9008DAF30 /* Assets.xcassets */; };
@@ -14,6 +16,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B6A0BA22C2016140097D717 /* SharePlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePlay.swift; sourceTree = "<group>"; };
+		5B6A0BA62C2016C20097D717 /* Canvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
+		5B6A0BA82C201FE30097D717 /* SolveMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SolveMate.entitlements; sourceTree = "<group>"; };
 		7299C6AA2C2008E8008DAF30 /* SolveMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SolveMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7299C6AD2C2008E8008DAF30 /* SolveMateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolveMateApp.swift; sourceTree = "<group>"; };
 		7299C6AF2C2008E8008DAF30 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
@@ -51,8 +56,11 @@
 		7299C6AC2C2008E8008DAF30 /* SolveMate */ = {
 			isa = PBXGroup;
 			children = (
+				5B6A0BA82C201FE30097D717 /* SolveMate.entitlements */,
 				7299C6AD2C2008E8008DAF30 /* SolveMateApp.swift */,
 				7299C6AF2C2008E8008DAF30 /* CanvasView.swift */,
+				5B6A0BA22C2016140097D717 /* SharePlay.swift */,
+				5B6A0BA62C2016C20097D717 /* Canvas.swift */,
 				7299C6B12C2008E9008DAF30 /* Assets.xcassets */,
 				7299C6B32C2008E9008DAF30 /* Preview Content */,
 			);
@@ -137,6 +145,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B6A0BA72C2016C20097D717 /* Canvas.swift in Sources */,
+				5B6A0BA32C2016140097D717 /* SharePlay.swift in Sources */,
 				7299C6B02C2008E8008DAF30 /* CanvasView.swift in Sources */,
 				7299C6AE2C2008E8008DAF30 /* SolveMateApp.swift in Sources */,
 			);
@@ -197,7 +207,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -254,7 +264,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -269,10 +279,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SolveMate/SolveMate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SolveMate/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SVD93R8N6;
+				DEVELOPMENT_TEAM = 4S9N87385A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -298,10 +309,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SolveMate/SolveMate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SolveMate/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SVD93R8N6;
+				DEVELOPMENT_TEAM = 4S9N87385A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
