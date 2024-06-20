@@ -6,35 +6,43 @@ import Combine
 @MainActor
 class CanvasController: ObservableObject {
     @Published var groupSession: GroupSession<SharePlay>?
-    @Published var receivedDrawingData: Data? = nil
+    @Published var receivedDrawingData: Data?
     private var messenger: GroupSessionMessenger?
     private var subscriptions = Set<AnyCancellable>()
+    private var tasks = Set<Task<Void, Never>>()
+    
+    func startSharing() {
+        Task {
+            do {
+                _ = try await SharePlay().activate()
+            } catch {
+                print("Failed to activate SharePlay activity: \(error)")
+            }
+        }
+    }
     
     func configureGroupSession(_ groupSession: GroupSession<SharePlay>) {
         self.groupSession = groupSession
         let messenger = GroupSessionMessenger(session: groupSession)
         self.messenger = messenger
         
-        // groupSession의 상태를 확인한다.
         groupSession.$state
-            .sink { state in
+            .sink { [weak self] state in
                 if case .invalidated = state {
-                    self.groupSession = nil
+                    self?.groupSession = nil
+                    self?.reset()
                 }
             }
             .store(in: &subscriptions)
         
-        // 받은 drawing데이터를 messenger를 통하여 보낸다.
-        Task {
-            for await (message, _) in messenger.messages(of: Data.self){
-                receiveDrawingData()
-            }
+        let task = Task {
+            await self.receiveDrawingData()
         }
+        tasks.insert(task)
         
         groupSession.join()
     }
     
-    // 상대방의 앱으로 drawingData를 보낸다.
     func sendDrawingData(_ drawingData: Data) {
         guard let messenger = messenger else { return }
         messenger.send(drawingData) { error in
@@ -44,15 +52,22 @@ class CanvasController: ObservableObject {
         }
     }
     
-    // 상대방 앱의 drawingData를 받을 때 사용하는 함수
-    private func receiveDrawingData() {
+    private func receiveDrawingData() async {
         guard let messenger = messenger else { return }
-        Task {
-            for await (drawingData, _) in messenger.messages(of: Data.self) {
-                DispatchQueue.main.async {
-                    self.receivedDrawingData = drawingData
-                }
-            }
+        for try await (drawingData, _) in messenger.messages(of: Data.self) {
+            self.receivedDrawingData = drawingData
+        }
+    }
+    
+    func reset() {
+        messenger = nil
+        tasks.forEach { $0.cancel() }
+        tasks = []
+        subscriptions = []
+        if groupSession != nil {
+            groupSession?.leave()
+            groupSession = nil
+            self.startSharing()
         }
     }
 }

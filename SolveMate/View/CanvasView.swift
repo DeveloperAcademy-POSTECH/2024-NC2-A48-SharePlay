@@ -1,6 +1,9 @@
 import SwiftUI
 import PencilKit
 import GroupActivities
+import os
+
+let logger = Logger(subsystem: "com.yourApp.bundleID", category: "network")
 
 //var undoBarButtonitem: UIBarButtonItem!
 //var redoBarButtonItem: UIBarButtonItem!
@@ -42,32 +45,18 @@ struct Home : View {
                     })
 
                     Button {
-                        // SharePlay 실행 테스크
-                        Task {
-                            do {
-                                _ = try await SharePlay().activate()
-                            } catch {
-                                print("Failed to activate SharePlay activity: \(error)")
-                            }
-                        }
+                        canvas.startSharing()
                     } label: {
                         Image(systemName: "shareplay")
                             .font(.title)
                     }
                 }
-                .task {
-                    for await session in SharePlay.sessions() {
-                        canvas.configureGroupSession(session)
-                    }
-                }
                 .frame(height: 44)
                 .padding(.horizontal, 20)
                 
-                //toolbar
                 HStack(spacing: 0) {
                     Spacer()
                     
-                    //Undo & Redo
                     Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                         Image(systemName: "arrow.uturn.backward")
                             .font(.title)
@@ -79,7 +68,6 @@ struct Home : View {
                     })
                     .padding(.trailing, 32)
                     
-                    //changing type...
                     ToolButton(icon: "pencil", tool: .pencil, selectedTool: $selectedTool) {
                         isDraw = true
                         type = .pencil
@@ -99,12 +87,10 @@ struct Home : View {
                     }
                     .padding(.trailing, 32)
                     
-                    //ColorPicker
                     ColorPicker("", selection: $color)
                         .labelsHidden()
                         .padding(.trailing, 32)
                     
-                    //Control thickness
                     ThicknessButton(thickness: 1.0, selectedThickness: $selectedThickness, width: 12) {
                         setToolThickness(1.0)
                     }
@@ -128,10 +114,15 @@ struct Home : View {
                 
                 DrawingView(drawingView: $drawingView, canvasController: canvas, isDraw: $isDraw, type: $type, color: $color, thickness: $thickness)
             }
+            .task {
+                for await session in SharePlay.sessions() {
+                    logger.log("configureGroupSession called")
+                    canvas.configureGroupSession(session)
+                }
+            }
         }
     }
     
-    //Control thikness
     func setToolThickness(_ thickness: CGFloat) {
         self.thickness = thickness
         if isDraw {
@@ -145,7 +136,6 @@ struct Home : View {
 enum ToolType {
     case pencil, pen, marker, eraser
 }
-
 
 struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
