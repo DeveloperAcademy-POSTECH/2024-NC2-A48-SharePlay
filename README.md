@@ -1,6 +1,6 @@
 # 2024-NC2-A48-SharePlay
 ## 🎥 Youtube Link
-(추후 만들어진 유튜브 링크 추가)
+추후 추가될 예정입니다.
 
 ## 💡 About SharePlay
 SharePlay는 FaceTime 통화 중에 참여하는 모든 기기에서 **앱 재생을** **동기화**하여 모든 사람이 **동시에 경험**을 즐길 수 있는 원활한 미디어 및 콘텐츠 공유를 도와줍니다. 
@@ -32,7 +32,11 @@ SharePlay는 다양한 기능을 제공하기보다는 하나의 기술로서 �
 > ***PencilKit***을 이용해 수학 문제를 풀 수 있는 캔버스를 개발하고, ***SharePlay***를 활용하여 사용자들이 실시간으로 캔버스에 문제 풀이를 작성하고, 공유할 수 있도록 구현하는 것을 목표로 합니다.
 
 ## 🖼️ Prototype
-(프로토타입과 설명 추가)
+**피그마 프로토타입**
+![피그마 프로토타입](https://github.com/DeveloperAcademy-POSTECH/2024-NC2-A48-SharePlay/assets/144869234/8b23490a-e59c-4303-a0f5-30e90df29bce "피그마 프로토타입")
+
+**앱 실행 예시 사진**
+![앱 실행 예시 사진](https://github.com/DeveloperAcademy-POSTECH/2024-NC2-A48-SharePlay/assets/144869234/ebafd285-25ab-4636-8faf-07ff2603d0e7 "앱 실행 예시 사진")
 
 ## 🛠️ About Code
 ```Swift
