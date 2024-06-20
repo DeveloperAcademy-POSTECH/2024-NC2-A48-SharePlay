@@ -25,7 +25,7 @@ struct DrawingView : UIViewRepresentable {
     
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         uiView.tool = isDraw ? ink : eraser
-
+        
         if let drawingData = self.canvasController.receivedDrawingData {
             if let drawing = try? PKDrawing(data: drawingData) {
                 if uiView.drawing != drawing {
@@ -35,7 +35,8 @@ struct DrawingView : UIViewRepresentable {
                     }
                 }
             }
-        }    }
+        }
+    }
     
     func makeCoordinator() -> Coordinator {
         return Coordinator(self, canvasController: canvasController)
@@ -52,11 +53,9 @@ struct DrawingView : UIViewRepresentable {
         
         func canvasViewDrawingDidChange(_ drawingView: PKCanvasView) {
             let drawing = drawingView.drawing
-                DispatchQueue.global(qos: .background).async {
-                    self.canvasController.sendDrawingData(drawing.dataRepresentation())
-                }
+            DispatchQueue.global(qos: .background).async {
+                self.canvasController.sendDrawingData(drawing.dataRepresentation())
+            }
         }
-        
     }
-    
 }

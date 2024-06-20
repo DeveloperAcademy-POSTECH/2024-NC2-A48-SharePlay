@@ -1,12 +1,6 @@
 import SwiftUI
 import PencilKit
 import GroupActivities
-import os
-
-let logger = Logger(subsystem: "com.yourApp.bundleID", category: "network")
-
-//var undoBarButtonitem: UIBarButtonItem!
-//var redoBarButtonItem: UIBarButtonItem!
 
 struct CanvasView: View {
     var body: some View {
@@ -30,7 +24,6 @@ struct Home : View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                //navigationbar
                 HStack(spacing: 15) {
                     Button(action: {}, label: {
                         Image(systemName: "chevron.backward")
@@ -116,7 +109,6 @@ struct Home : View {
             }
             .task {
                 for await session in SharePlay.sessions() {
-                    logger.log("configureGroupSession called")
                     canvas.configureGroupSession(session)
                 }
             }
