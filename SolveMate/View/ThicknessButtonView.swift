@@ -8,13 +8,13 @@ struct ThicknessButton: View {
     
     var body: some View {
         Button(action: {
-                    selectedThickness = thickness
-                    action()
-                }) {
-                    Circle()
-                        .stroke(selectedThickness == thickness ? Color.black : Color.gray, lineWidth: 2)
-                        .foregroundColor(.white)
-                        .frame(width: width)
-                }
+            selectedThickness = thickness
+            action()
+        }) {
+            Circle()
+                .stroke(selectedThickness == thickness ? Color.black : Color.gray, lineWidth: 2)
+                .foregroundColor(.white)
+                .frame(width: width)
+        }
     }
 }
