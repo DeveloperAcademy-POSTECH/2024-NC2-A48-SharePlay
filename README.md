@@ -1,6 +1,6 @@
 # 2024-NC2-A48-SharePlay
 ## 🎥 Youtube Link
-추후 추가될 예정입니다.
+[SharePlay | Yusol, Min](https://www.youtube.com/watch?v=yCrE75Mg7RU)
 
 ## 💡 About SharePlay
 SharePlay는 FaceTime 통화 중에 참여하는 모든 기기에서 **앱 재생을** **동기화**하여 모든 사람이 **동시에 경험**을 즐길 수 있는 원활한 미디어 및 콘텐츠 공유를 도와줍니다. 
